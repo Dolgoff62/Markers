@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Markers</string>
+    <string name="add_marker">add marker</string>
+    <string name="marker_logo">marker logo</string>
+    <string name="menu_item_edit">Edit</string>
+    <string name="menu_item_delete">Delete</string>
+    <string name="empty_posts">Nothing to show yet. You can swipe to refresh or add new marker.</string>
+    <string name="retry_loading">Retry</string>
+    <string name="error_loading">Error loading</string>
+</resources>
