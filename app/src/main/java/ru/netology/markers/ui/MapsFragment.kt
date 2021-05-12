@@ -51,11 +51,23 @@ class MapsFragment() : Fragment(), UserLocationObjectListener, CameraListener {
             container,
             false
         )
+        mapView = binding.mapview
 
         checkPermission()
-        userInterface(binding)
 
-        mapView = binding.mapview
+        val mapLogoAlignment = Alignment(HorizontalAlignment.LEFT, VerticalAlignment.BOTTOM)
+        mapView.map.logo.setAlignment(mapLogoAlignment)
+        mapView.map.isModelsEnabled = true
+
+        binding.userLocationFab.setOnClickListener {
+            if (permissionLocation) {
+                cameraUserPosition()
+
+                followUserLocation = true
+            } else {
+                checkPermission()
+            }
+        }
 
         return binding.root
     }
@@ -82,22 +94,7 @@ class MapsFragment() : Fragment(), UserLocationObjectListener, CameraListener {
             }
         }
     }
-
-    private fun userInterface() {
-        val mapLogoAlignment = Alignment(HorizontalAlignment.LEFT, VerticalAlignment.BOTTOM)
-        mapView.map.logo.setAlignment(mapLogoAlignment)
-
-        binding.userLocationFab.setOnClickListener {
-            if (permissionLocation) {
-                cameraUserPosition()
-
-                followUserLocation = true
-            } else {
-                checkPermission()
-            }
-        }
-    }
-
+    
     private fun onMapReady() {
         val mapKit = MapKitFactory.getInstance()
         userLocationLayer = mapKit.createUserLocationLayer(mapView.mapWindow)
@@ -128,44 +125,16 @@ class MapsFragment() : Fragment(), UserLocationObjectListener, CameraListener {
         }
     }
 
-    override fun onCameraPositionChanged(
-        p0: Map, p1: CameraPosition, p2: CameraUpdateReason, finish: Boolean
-    ) {
-        if (finish) {
-            if (followUserLocation) {
-                setAnchor()
-            }
-        } else {
-            if (!followUserLocation) {
-                noAnchor()
-            }
-        }
-    }
-
-    private fun setAnchor() {
-        userLocationLayer.setAnchor(
-            PointF((mapView.width * 0.5).toFloat(), (mapView.height * 0.5).toFloat()),
-            PointF((mapView.width * 0.5).toFloat(), (mapView.height * 0.83).toFloat())
-        )
-
-        binding.userLocationFab.setImageResource(R.drawable.ic_my_location_black_24dp)
-
-        followUserLocation = false
-    }
-
-    private fun noAnchor() {
-        userLocationLayer.resetAnchor()
-
-        binding.userLocationFab.setImageResource(R.drawable.ic_location_searching_black_24dp)
-    }
-
     override fun onObjectAdded(userLocationView: UserLocationView) {
-        setAnchor()
 
         userLocationView.pin.setIcon(fromResource(this.requireContext(), R.drawable.user_arrow))
         userLocationView.arrow.setIcon(fromResource(this.requireContext(), R.drawable.user_arrow))
         userLocationView.accuracyCircle.fillColor = BLUE
     }
+
+    override fun onCameraPositionChanged(
+        p0: Map, p1: CameraPosition, p2: CameraUpdateReason, finish: Boolean
+    ) {}
 
     override fun onObjectUpdated(p0: UserLocationView, p1: ObjectEvent) {}
 
