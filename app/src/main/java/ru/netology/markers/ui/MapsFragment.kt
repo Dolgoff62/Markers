@@ -12,15 +12,14 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import com.yandex.mapkit.Animation
+import com.yandex.mapkit.MapKit
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.layers.ObjectEvent
 import com.yandex.mapkit.logo.Alignment
 import com.yandex.mapkit.logo.HorizontalAlignment
 import com.yandex.mapkit.logo.VerticalAlignment
-import com.yandex.mapkit.map.CameraListener
-import com.yandex.mapkit.map.CameraPosition
-import com.yandex.mapkit.map.CameraUpdateReason
+import com.yandex.mapkit.map.*
 import com.yandex.mapkit.map.Map
 import com.yandex.mapkit.mapview.MapView
 import com.yandex.mapkit.user_location.UserLocationLayer
@@ -58,6 +57,9 @@ class MapsFragment() : Fragment(), UserLocationObjectListener, CameraListener {
         val mapLogoAlignment = Alignment(HorizontalAlignment.LEFT, VerticalAlignment.BOTTOM)
         mapView.map.logo.setAlignment(mapLogoAlignment)
         mapView.map.isModelsEnabled = true
+        MapKitFactory.getInstance().apply {
+
+        }
 
         binding.userLocationFab.setOnClickListener {
             if (permissionLocation) {
@@ -71,6 +73,18 @@ class MapsFragment() : Fragment(), UserLocationObjectListener, CameraListener {
 
         return binding.root
     }
+
+//    private fun addMarkers(dataList: List<Data>) {
+//        for (data in dataList) {
+//            val marker = yandexMap.addMarker(
+//                latitude = data.latitude,
+//                longitude = data.longitude,
+//                imageRes = R.drawable.ic_marker,
+//                userData = data.tag
+//            )
+//            //Вот здесь я как раз и сохраняю каждый маркер в свою мапу
+//            markerDataList[data] = marker
+//        }
 
     private fun checkPermission() {
         val permissionLocation = checkSelfPermission(this.requireContext(), ACCESS_FINE_LOCATION)
