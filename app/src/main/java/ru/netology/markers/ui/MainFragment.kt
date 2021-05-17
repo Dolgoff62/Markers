@@ -49,14 +49,14 @@ class MainFragment : Fragment() {
             }
 
             override fun onMarker(marker: Marker) {
-//                findNavController().navigate(R.id.action_mainFragment_to_mapsFragment)
-                findNavController().navigate(R.id.action_mainFragment_to_yandexMapView)
+                findNavController().navigate(R.id.action_mainFragment_to_mapsFragment)
+//                findNavController().navigate(R.id.action_mainFragment_to_yandexMapView)
             }
         }
         )
         binding.fabAddNewPost.setOnClickListener {
-//            findNavController().navigate(R.id.action_mainFragment_to_mapsFragment)
-            findNavController().navigate(R.id.action_mainFragment_to_yandexMapView)
+            findNavController().navigate(R.id.action_mainFragment_to_mapsFragment)
+//            findNavController().navigate(R.id.action_mainFragment_to_yandexMapView)
         }
 
         viewModel.dataState.observe(viewLifecycleOwner, { state ->

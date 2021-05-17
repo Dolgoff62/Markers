@@ -30,12 +30,13 @@ import ru.netology.markers.R
 import ru.netology.markers.databinding.FragmentMapsBinding
 
 
-class MapsFragment() : Fragment(), UserLocationObjectListener, CameraListener {
+class MapsFragment : Fragment(), UserLocationObjectListener, CameraListener {
     private lateinit var mapView: MapView
     private lateinit var userLocationLayer: UserLocationLayer
     private var routeStartLocation = Point(0.0, 0.0)
     private var permissionLocation = false
     private var followUserLocation = false
+    private var markerTapListener: MapObjectTapListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,9 +58,7 @@ class MapsFragment() : Fragment(), UserLocationObjectListener, CameraListener {
         val mapLogoAlignment = Alignment(HorizontalAlignment.LEFT, VerticalAlignment.BOTTOM)
         mapView.map.logo.setAlignment(mapLogoAlignment)
         mapView.map.isModelsEnabled = true
-        MapKitFactory.getInstance().apply {
 
-        }
 
         binding.userLocationFab.setOnClickListener {
             if (permissionLocation) {
@@ -85,6 +84,7 @@ class MapsFragment() : Fragment(), UserLocationObjectListener, CameraListener {
 //            //Вот здесь я как раз и сохраняю каждый маркер в свою мапу
 //            markerDataList[data] = marker
 //        }
+    // }
 
     private fun checkPermission() {
         val permissionLocation = checkSelfPermission(this.requireContext(), ACCESS_FINE_LOCATION)

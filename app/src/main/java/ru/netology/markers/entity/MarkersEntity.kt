@@ -8,23 +8,32 @@ import ru.netology.markers.dto.Marker
 @Entity
 data class MarkersEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
-    val description: String,
-    val publishedDate: String
+    val markerId: Int,
+    val markerTitle: String,
+    val markerDescription: String,
+    val publishedDate: String,
+    val latitude: Double,
+    val longitude: Double
 ) {
     fun toDto() = Marker(
-        id,
-        description,
-        publishedDate
+        markerId,
+        markerTitle,
+        markerDescription,
+        publishedDate,
+        latitude,
+        longitude
     )
 
 
     companion object {
         fun fromDto(dto: Marker) =
             MarkersEntity(
-                dto.id,
-                dto.description,
-                dto.publishedDate
+                dto.markerId,
+                dto.markerTitle,
+                dto.markerDescription,
+                dto.publishedDate,
+                dto.latitude,
+                dto.longitude
             )
     }
 }

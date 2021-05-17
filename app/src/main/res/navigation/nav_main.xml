@@ -10,26 +10,26 @@
         android:name="ru.netology.markers.ui.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main">
-<!--        <action-->
-<!--            android:id="@+id/action_mainFragment_to_mapsFragment"-->
-<!--            app:destination="@id/mapsFragment" />-->
         <action
-            android:id="@+id/action_mainFragment_to_yandexMapView"
-            app:destination="@id/yandexMapView" />
+            android:id="@+id/action_mainFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+<!--        <action-->
+<!--            android:id="@+id/action_mainFragment_to_yandexMapView"-->
+<!--            app:destination="@id/yandexMapView" />-->
     </fragment>
-
-<!--    <fragment-->
-<!--        android:id="@+id/mapsFragment"-->
-<!--        android:name="ru.netology.markers.ui.MapsFragment"-->
-<!--        android:label="fragment_maps"-->
-<!--        tools:layout="@layout/fragment_maps">-->
-<!--        </fragment>-->
 
     <fragment
-        android:id="@+id/yandexMapView"
-        android:name="ru.netology.markers.ui.YandexMapView"
+        android:id="@+id/mapsFragment"
+        android:name="ru.netology.markers.ui.MapsFragment"
         android:label="fragment_maps"
         tools:layout="@layout/fragment_maps">
-    </fragment>
+        </fragment>
+
+<!--    <fragment-->
+<!--        android:id="@+id/yandexMapView"-->
+<!--        android:name="ru.netology.markers.ui.YandexMapView"-->
+<!--        android:label="fragment_maps"-->
+<!--        tools:layout="@layout/fragment_maps">-->
+<!--    </fragment>-->
 
 </navigation>

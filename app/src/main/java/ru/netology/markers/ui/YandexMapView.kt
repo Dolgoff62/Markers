@@ -2,6 +2,7 @@ package ru.netology.markers.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.PointF
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,19 +14,32 @@ import androidx.fragment.app.Fragment
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.layers.ObjectEvent
+import com.yandex.mapkit.logo.Alignment
+import com.yandex.mapkit.logo.HorizontalAlignment
+import com.yandex.mapkit.logo.VerticalAlignment
 import com.yandex.mapkit.map.*
 import com.yandex.mapkit.map.Map
 import com.yandex.mapkit.mapview.MapView
+import com.yandex.mapkit.user_location.UserLocationLayer
+import com.yandex.mapkit.user_location.UserLocationObjectListener
+import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.Runtime.init
 import com.yandex.runtime.image.ImageProvider
+import ru.netology.markers.R
 import ru.netology.markers.databinding.FragmentMapsBinding
 
-class YandexMapView : Fragment() {
+class YandexMapView : Fragment(), UserLocationObjectListener, CameraListener {
 
     private lateinit var yandexMap: MapView
     private lateinit var mapObjectCollection: MapObjectCollection
     private var markerTapListener: MapObjectTapListener? = null
     private val userLocation by lazy { getUserLocationLayer() }
+    private lateinit var userLocationLayer: UserLocationLayer
+    private var routeStartLocation = Point(0.0, 0.0)
+    private var permissionLocation = false
+    private var followUserLocation = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,8 +60,21 @@ class YandexMapView : Fragment() {
         yandexMap = binding.mapview
 
         checkPermission()
+        val mapLogoAlignment = Alignment(HorizontalAlignment.LEFT, VerticalAlignment.BOTTOM)
+        yandexMap.map.logo.setAlignment(mapLogoAlignment)
+        yandexMap.map.isModelsEnabled = true
 
-        setTapListener(listener = )
+        showUserLocation()
+
+        binding.userLocationFab.setOnClickListener {
+            if (permissionLocation) {
+                cameraUserPosition()
+                followUserLocation = true
+            } else {
+                checkPermission()
+            }
+        }
+
 
         return binding.root
     }
@@ -136,8 +163,49 @@ class YandexMapView : Fragment() {
 
     fun getZoom() = yandexMap.map.cameraPosition.zoom
 
+    private fun cameraUserPosition() {
+        if (userLocationLayer.cameraPosition() != null) {
+            routeStartLocation = userLocationLayer.cameraPosition()!!.target
+            yandexMap.map.move(
+                CameraPosition(
+                    routeStartLocation,
+                    16f,
+                    0f,
+                    0f
+                ), Animation(Animation.Type.SMOOTH, 1f), null
+            )
+        } else {
+            yandexMap.map.move(CameraPosition(Point(0.0, 0.0), 16f, 0f, 0f))
+        }
+    }
+
     private fun getUserLocationLayer() =
         MapKitFactory.getInstance().createUserLocationLayer(yandexMap.mapWindow)
+
+    override fun onCameraPositionChanged(
+        p0: Map, p1: CameraPosition, p2: CameraUpdateReason, finish: Boolean
+    ) {}
+
+    override fun onObjectUpdated(p0: UserLocationView, p1: ObjectEvent) {}
+
+    override fun onObjectAdded(userLocationView: UserLocationView) {
+
+        userLocationView.pin.setIcon(
+            ImageProvider.fromResource(
+                this.requireContext(),
+                R.drawable.user_arrow
+            )
+        )
+        userLocationView.arrow.setIcon(
+            ImageProvider.fromResource(
+                this.requireContext(),
+                R.drawable.user_arrow
+            )
+        )
+        userLocationView.accuracyCircle.fillColor = Color.BLUE
+    }
+
+    override fun onObjectRemoved(p0: UserLocationView) {}
 
     companion object {
 
