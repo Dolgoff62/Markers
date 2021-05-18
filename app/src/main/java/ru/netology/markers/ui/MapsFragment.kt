@@ -1,18 +1,16 @@
 package ru.netology.markers.ui
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.R.drawable.*
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.Color.BLUE
-import android.graphics.PointF
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import com.yandex.mapkit.Animation
-import com.yandex.mapkit.MapKit
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.layers.ObjectEvent
@@ -33,6 +31,7 @@ import ru.netology.markers.databinding.FragmentMapsBinding
 class MapsFragment : Fragment(), UserLocationObjectListener, CameraListener {
     private lateinit var mapView: MapView
     private lateinit var userLocationLayer: UserLocationLayer
+    private lateinit var mapObjectCollection: MapObjectCollection
     private var routeStartLocation = Point(0.0, 0.0)
     private var permissionLocation = false
     private var followUserLocation = false
@@ -58,6 +57,7 @@ class MapsFragment : Fragment(), UserLocationObjectListener, CameraListener {
         val mapLogoAlignment = Alignment(HorizontalAlignment.LEFT, VerticalAlignment.BOTTOM)
         mapView.map.logo.setAlignment(mapLogoAlignment)
         mapView.map.isModelsEnabled = true
+        mapView.map.isTappableAreaRenderingEnabled = true
 
 
         binding.userLocationFab.setOnClickListener {
@@ -70,21 +70,23 @@ class MapsFragment : Fragment(), UserLocationObjectListener, CameraListener {
             }
         }
 
+
+
         return binding.root
     }
 
 //    private fun addMarkers(dataList: List<Data>) {
 //        for (data in dataList) {
-//            val marker = yandexMap.addMarker(
+//            val marker = mapView.addMarker(
 //                latitude = data.latitude,
 //                longitude = data.longitude,
-//                imageRes = R.drawable.ic_marker,
+//                imageRes = R.drawable.marker_icon,
 //                userData = data.tag
 //            )
 //            //Вот здесь я как раз и сохраняю каждый маркер в свою мапу
 //            markerDataList[data] = marker
 //        }
-    // }
+//     }
 
     private fun checkPermission() {
         val permissionLocation = checkSelfPermission(this.requireContext(), ACCESS_FINE_LOCATION)
@@ -108,7 +110,7 @@ class MapsFragment : Fragment(), UserLocationObjectListener, CameraListener {
             }
         }
     }
-    
+
     private fun onMapReady() {
         val mapKit = MapKitFactory.getInstance()
         userLocationLayer = mapKit.createUserLocationLayer(mapView.mapWindow)
@@ -139,6 +141,21 @@ class MapsFragment : Fragment(), UserLocationObjectListener, CameraListener {
         }
     }
 
+    fun addMarker(
+        latitude: Double,
+        longitude: Double,
+        @DrawableRes imageRes: Int,
+        userData: Any? = null
+    ): PlacemarkMapObject {
+        val marker = mapObjectCollection.addPlacemark(
+            Point(latitude, longitude),
+            fromResource(context, imageRes)
+        )
+        marker.userData = userData
+        markerTapListener?.let { marker.addTapListener(it) }
+        return marker
+    }
+
     override fun onObjectAdded(userLocationView: UserLocationView) {
 
         userLocationView.pin.setIcon(fromResource(this.requireContext(), R.drawable.user_arrow))
@@ -148,7 +165,8 @@ class MapsFragment : Fragment(), UserLocationObjectListener, CameraListener {
 
     override fun onCameraPositionChanged(
         p0: Map, p1: CameraPosition, p2: CameraUpdateReason, finish: Boolean
-    ) {}
+    ) {
+    }
 
     override fun onObjectUpdated(p0: UserLocationView, p1: ObjectEvent) {}
 

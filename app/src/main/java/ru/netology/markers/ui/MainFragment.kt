@@ -8,7 +8,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import ru.netology.markers.R
 import ru.netology.markers.adapter.MarkersAdapter
 import ru.netology.markers.adapter.OnItemClickListener
@@ -40,7 +39,7 @@ class MainFragment : Fragment() {
 
         val adapter = MarkersAdapter(object : OnItemClickListener {
             override fun onEdit(marker: Marker) {
-                viewModel.editMarker(marker.description)
+                viewModel.editMarker(marker.markerDescription)
                 viewModel.saveMarker()
             }
 

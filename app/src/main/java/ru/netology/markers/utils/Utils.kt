@@ -6,8 +6,11 @@ class Utils {
     object EmptyMarker {
         val empty = Marker(
             id = 0,
-            description = "",
-            publishedDate = ""
+            markerTitle = "",
+            markerDescription = "",
+            publishedDate = "",
+            latitude = 0.0,
+            longitude = 0.0
         )
     }
 }

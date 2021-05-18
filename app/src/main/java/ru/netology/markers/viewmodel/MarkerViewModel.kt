@@ -38,10 +38,10 @@ class MarkerViewModel(application: Application) : AndroidViewModel(application) 
 
     fun editMarker(description: String) {
         val text = description.trim()
-        if (edited.value?.description == text) {
+        if (edited.value?.markerDescription == text) {
             return
         }
-        edited.value = edited.value?.copy(description = text)
+        edited.value = edited.value?.copy(markerDescription = text)
     }
 
     fun deleteMarker(id: Int) = repository.deleteMarker(id)
